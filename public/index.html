@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Server — Dalang Store</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-base: #070b14;
+            --card-bg: rgba(15, 23, 42, 0.62);
+            --card-border: rgba(148, 163, 184, 0.14);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-base);
+            color: #f1f5f9;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 12% 10%, rgba(6, 182, 212, 0.14), transparent 34%),
+                radial-gradient(circle at 88% 15%, rgba(139, 92, 246, 0.14), transparent 36%),
+                radial-gradient(circle at 50% 95%, rgba(16, 185, 129, 0.09), transparent 42%);
+            background-attachment: fixed;
+        }
+
+        .font-mono-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Glassmorphism Card */
+        .pro-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.55), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+            transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .pro-card:hover {
+            border-color: rgba(56, 189, 248, 0.26);
+        }
+
+        /* Top Glass Navbar */
+        .glass-navbar {
+            background: rgba(7, 11, 20, 0.78);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+        }
+
+        /* Glass Navigation Drawer */
+        .glass-drawer {
+            background: rgba(10, 16, 30, 0.94);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            border-left: 1px solid rgba(148, 163, 184, 0.16);
+        }
+
+        /* Progress Bar */
+        .progress-track {
+            width: 100%;
+            height: 0.45rem;
+            background: rgba(15, 23, 42, 0.85);
+            border-radius: 9999px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 9999px;
+            transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.4);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(100, 116, 139, 0.45);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.65);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
+
+    <!-- =================================================================== -->
+    <!-- TOP NAVBAR (RAPI, ANTI-TERPOTONG, MENU GARIS 3 DI POJOK KANAN)      -->
+    <!-- =================================================================== -->
+    <header class="glass-navbar sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-3">
+            <!-- Brand Kiri: Home Server & Dalang Store -->
+            <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-400/30 flex items-center justify-center text-cyan-400 shrink-0 shadow-inner">
+                    <i class="fa-solid fa-server text-base sm:text-lg"></i>
+                </div>
+                <div class="min-w-0">
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-sm sm:text-base font-bold tracking-tight text-white truncate">Home Server</h1>
+                        <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 shrink-0">
+                            Dalang Store
+                        </span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 truncate sm:hidden">Dalang Store</p>
+                    <p id="nav-subtitle" class="hidden sm:block text-[11px] text-slate-400 truncate">Armbian STB Monitoring &amp; Workspace</p>
+                </div>
+            </div>
+
+            <!-- Kanan: Status Koneksi & Tombol Menu Garis 3 -->
+            <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                <!-- Indikator Status -->
+                <div id="conn-badge" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900/80 border border-white/10 text-[11px] sm:text-xs font-medium text-emerald-300">
+                    <span id="conn-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+                    <span id="conn-text" class="whitespace-nowrap">Online</span>
+                </div>
+
+                <!-- Tombol Menu Garis 3 Pojok Kanan -->
+                <button id="btn-menu-open" type="button" aria-label="Buka Menu" class="w-10 h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 active:scale-95 border border-white/10 flex items-center justify-center text-slate-200 hover:text-cyan-300 transition cursor-pointer">
+                    <i class="fa-solid fa-bars text-base"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- =================================================================== -->
+    <!-- NAVIGATION DRAWER (MENU GARIS 3)                                    -->
+    <!-- =================================================================== -->
+    <div id="nav-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden opacity-0 transition-opacity duration-200"></div>
+
+    <aside id="nav-drawer" class="glass-drawer fixed top-0 right-0 h-full w-72 sm:w-80 z-50 transform translate-x-full transition-transform duration-250 ease-out flex flex-col justify-between p-5 shadow-2xl">
+        <div>
+            <!-- Header Drawer -->
+            <div class="flex items-center justify-between pb-4 border-b border-white/10">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-cyan-500/15 border border-cyan-400/25 flex items-center justify-center text-cyan-400">
+                        <i class="fa-solid fa-server"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-white leading-tight">Home Server</p>
+                        <p class="text-[11px] text-cyan-400 font-medium">Dalang Store</p>
+                    </div>
+                </div>
+                <button id="btn-menu-close" type="button" aria-label="Tutup Menu" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white transition cursor-pointer">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <!-- Daftar Menu Navigasi -->
+            <nav class="mt-5 space-y-2">
+                <p class="px-3 text-[10px] font-semibold uppercase tracking-wider text-slate-500">Menu Utama</p>
+
+                <button type="button" data-nav="dashboard" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium bg-cyan-500/15 text-cyan-300 border border-cyan-400/25 transition cursor-pointer">
+                    <i class="fa-solid fa-gauge-high w-5 text-center"></i>
+                    <span>Dashboard Monitor</span>
+                </button>
+
+                <button type="button" data-nav="files" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/5 border border-transparent transition cursor-pointer">
+                    <i class="fa-solid fa-folder-open w-5 text-center text-amber-400"></i>
+                    <span>File Manager (/home)</span>
+                </button>
+
+                <button type="button" data-nav="terminal" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/5 border border-transparent transition cursor-pointer">
+                    <i class="fa-solid fa-terminal w-5 text-center text-emerald-400"></i>
+                    <span>Web Terminal</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Footer Ringkas di Drawer -->
+        <div class="pt-4 border-t border-white/10 space-y-2.5 text-xs">
+            <div class="p-3 rounded-xl bg-slate-900/70 border border-white/5 space-y-1.5">
+                <div class="flex items-center justify-between text-slate-400">
+                    <span><i class="fa-solid fa-network-wired mr-1.5 text-cyan-400"></i>IP Lokal</span>
+                    <span id="drawer-ip" class="font-mono-num text-slate-200">--</span>
+                </div>
+                <div class="flex items-center justify-between text-slate-400">
+                    <span><i class="fa-solid fa-clock mr-1.5 text-emerald-400"></i>Uptime</span>
+                    <span id="drawer-uptime" class="font-mono-num text-slate-200">--</span>
+                </div>
+            </div>
+            <p class="text-center text-[11px] text-slate-500">Home Server &bull; Dalang Store</p>
+        </div>
+    </aside>
+
+    <!-- =================================================================== -->
+    <!-- KONTEN UTAMA                                                        -->
+    <!-- =================================================================== -->
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
+
+        <!-- =============================================================== -->
+        <!-- VIEW 1: DASHBOARD MONITOR                                       -->
+        <!-- =============================================================== -->
+        <main id="view-dashboard" class="space-y-4">
+
+            <!-- BARIS 1: 4 KARTU STATISTIK UTAMA SEJAJAR MENYAMPING -->
+            <section class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+                <!-- 1. CPU -->
+                <div class="pro-card p-3.5 sm:p-4 lg:p-5 flex flex-col justify-between gap-3">
+                    <div class="flex items-center justify-between gap-1.5">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-cyan-500/10 border border-cyan-400/20 flex items-center justify-center text-cyan-400 shrink-0">
+                                <i class="fa-solid fa-microchip text-xs sm:text-sm"></i>
+                            </div>
+                            <span class="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400 truncate">CPU</span>
+                        </div>
+                        <span id="cpu-cores" class="text-[10px] sm:text-[11px] px-1.5 sm:px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-mono-num shrink-0">-- Core</span>
+                    </div>
+
+                    <div>
+                        <div class="flex items-baseline justify-between gap-1 mb-2">
+                            <span id="cpu-percent" class="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold font-mono-num text-white truncate">0.0%</span>
+                            <span id="cpu-load" class="text-[10px] sm:text-xs text-slate-400 font-mono-num shrink-0">Load 0.00</span>
+                        </div>
+                        <div class="progress-track">
+                            <div id="cpu-bar" class="progress-fill bg-gradient-to-r from-cyan-400 to-blue-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <p id="cpu-model" class="text-[10px] sm:text-[11px] text-slate-400 truncate border-t border-white/5 pt-2">Memuat info CPU...</p>
+                </div>
+
+                <!-- 2. RAM -->
+                <div class="pro-card p-3.5 sm:p-4 lg:p-5 flex flex-col justify-between gap-3">
+                    <div class="flex items-center justify-between gap-1.5">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-violet-500/10 border border-violet-400/20 flex items-center justify-center text-violet-400 shrink-0">
+                                <i class="fa-solid fa-memory text-xs sm:text-sm"></i>
+                            </div>
+                            <span class="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400 truncate">RAM</span>
+                        </div>
+                        <span id="ram-percent-badge" class="text-[10px] sm:text-[11px] px-1.5 sm:px-2 py-0.5 rounded-md bg-violet-500/10 text-violet-300 border border-violet-500/20 font-mono-num shrink-0">0%</span>
+                    </div>
+
+                    <div>
+                        <div class="flex items-baseline justify-between gap-1 mb-2">
+                            <span id="ram-used" class="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold font-mono-num text-white truncate">0 MB</span>
+                            <span id="ram-total" class="text-[10px] sm:text-xs text-slate-400 font-mono-num shrink-0">/ --</span>
+                        </div>
+                        <div class="progress-track">
+                            <div id="ram-bar" class="progress-fill bg-gradient-to-r from-violet-400 to-fuchsia-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between gap-1 text-[10px] sm:text-[11px] text-slate-400 font-mono-num border-t border-white/5 pt-2">
+                        <span id="ram-avail" class="truncate">Sisa: --</span>
+                        <span id="swap-info" class="shrink-0">Swap: --</span>
+                    </div>
+                </div>
+
+                <!-- 3. STORAGE -->
+                <div class="pro-card p-3.5 sm:p-4 lg:p-5 flex flex-col justify-between gap-3">
+                    <div class="flex items-center justify-between gap-1.5">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-emerald-500/10 border border-emerald-400/20 flex items-center justify-center text-emerald-400 shrink-0">
+                                <i class="fa-solid fa-hard-drive text-xs sm:text-sm"></i>
+                            </div>
+                            <span class="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400 truncate">Storage</span>
+                        </div>
+                        <span id="disk-percent-badge" class="text-[10px] sm:text-[11px] px-1.5 sm:px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 font-mono-num shrink-0">0%</span>
+                    </div>
+
+                    <div>
+                        <div class="flex items-baseline justify-between gap-1 mb-2">
+                            <span id="disk-used" class="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold font-mono-num text-white truncate">0.0 GB</span>
+                            <span id="disk-total" class="text-[10px] sm:text-xs text-slate-400 font-mono-num shrink-0">/ --</span>
+                        </div>
+                        <div class="progress-track">
+                            <div id="disk-bar" class="progress-fill bg-gradient-to-r from-emerald-400 to-teal-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between gap-1 text-[10px] sm:text-[11px] text-slate-400 font-mono-num border-t border-white/5 pt-2">
+                        <span id="disk-avail" class="truncate">Kosong: --</span>
+                        <span id="disk-mount" class="shrink-0">Root: /</span>
+                    </div>
+                </div>
+
+                <!-- 4. SUHU SOC -->
+                <div class="pro-card p-3.5 sm:p-4 lg:p-5 flex flex-col justify-between gap-3">
+                    <div class="flex items-center justify-between gap-1.5">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-amber-500/10 border border-amber-400/20 flex items-center justify-center text-amber-400 shrink-0">
+                                <i class="fa-solid fa-temperature-half text-xs sm:text-sm"></i>
+                            </div>
+                            <span class="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400 truncate">Suhu</span>
+                        </div>
+                        <span id="temp-status" class="text-[10px] sm:text-[11px] px-1.5 sm:px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 font-medium shrink-0">Normal</span>
+                    </div>
+
+                    <div>
+                        <div class="flex items-baseline justify-between gap-1 mb-2">
+                            <span id="temp-val" class="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold font-mono-num text-white truncate">0.0°C</span>
+                            <span class="text-[10px] sm:text-xs text-slate-400 shrink-0">&lt; 75°C</span>
+                        </div>
+                        <div class="progress-track">
+                            <div id="temp-bar" class="progress-fill bg-gradient-to-r from-emerald-400 via-amber-400 to-rose-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <p id="temp-source" class="text-[10px] sm:text-[11px] text-slate-400 truncate border-t border-white/5 pt-2">Memuat sensor suhu...</p>
+                </div>
+            </section>
+
+            <!-- BARIS 2: GRAFIK TELEMETRI & KONSUMSI DAYA SEJAJAR MENYAMPING -->
+            <section class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                <!-- GRAFIK CPU & RAM -->
+                <div class="pro-card p-4 sm:p-5 md:col-span-7 lg:col-span-8 flex flex-col justify-between">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-400/20 flex items-center justify-center text-sky-400">
+                                <i class="fa-solid fa-chart-area text-sm"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-sm font-semibold text-white">Grafik Performa Real-Time</h2>
+                                <p class="text-[11px] text-slate-400">Riwayat pemakaian CPU &amp; RAM (60 detik terakhir)</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 text-xs">
+                            <span class="flex items-center gap-1.5 text-cyan-300 font-medium">
+                                <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>CPU
+                            </span>
+                            <span class="flex items-center gap-1.5 text-violet-300 font-medium">
+                                <span class="w-2.5 h-2.5 rounded-full bg-violet-400"></span>RAM
+                            </span>
+                        </div>
+                    </div>
+
+                    <div id="chart-wrapper" class="relative w-full h-48 sm:h-56">
+                        <canvas id="perf-chart" class="w-full h-full block"></canvas>
+                    </div>
+                </div>
+
+                <!-- KONSUMSI DAYA (WATT, AMPERE, VOLT) -->
+                <div class="pro-card p-4 sm:p-5 md:col-span-5 lg:col-span-4 flex flex-col justify-between gap-4">
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-lg bg-yellow-500/10 border border-yellow-400/20 flex items-center justify-center text-yellow-400">
+                                <i class="fa-solid fa-bolt text-sm"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-sm font-semibold text-white">Daya Listrik</h2>
+                                <p id="power-mode" class="text-[11px] text-slate-400">Profil Adaptor 5V DC</p>
+                            </div>
+                        </div>
+
+                        <!-- Pilih Adaptor 5V / 12V -->
+                        <div class="inline-flex rounded-lg bg-slate-900/90 p-0.5 border border-white/10 text-[11px] font-semibold">
+                            <button type="button" id="btn-volt-5" class="px-2 py-1 rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 transition cursor-pointer">5V</button>
+                            <button type="button" id="btn-volt-12" class="px-2 py-1 rounded-md text-slate-400 hover:text-white transition cursor-pointer">12V</button>
+                        </div>
+                    </div>
+
+                    <!-- Angka Utama Watt -->
+                    <div class="p-3.5 rounded-xl bg-slate-900/65 border border-white/5 flex items-center justify-between">
+                        <div>
+                            <p class="text-[11px] uppercase tracking-wider text-slate-400 font-semibold">Daya Aktif</p>
+                            <p id="power-watt" class="text-2xl sm:text-3xl font-extrabold font-mono-num text-yellow-300 mt-0.5">0.00 W</p>
+                        </div>
+                        <div class="text-right font-mono-num space-y-1">
+                            <div class="text-xs text-slate-300"><span class="text-slate-500">Tegangan:</span> <span id="power-volt" class="font-semibold text-white">5.00 V</span></div>
+                            <div class="text-xs text-slate-300"><span class="text-slate-500">Arus:</span> <span id="power-ampere" class="font-semibold text-white">0.00 A</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Estimasi Tagihan Listrik Bulanan -->
+                    <div class="flex items-center justify-between text-xs pt-2 border-t border-white/5">
+                        <span class="text-slate-400"><i class="fa-solid fa-coins mr-1.5 text-amber-400"></i>Estimasi 24/7 (30 Hari)</span>
+                        <span id="power-cost" class="font-mono-num font-semibold text-emerald-300">Rp 0 / bln</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BARIS 3: INFORMASI SISTEM & DAFTAR PROSES SEJAJAR MENYAMPING -->
+            <section class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                <!-- INFORMASI SISTEM & JARINGAN -->
+                <div class="pro-card p-4 sm:p-5 md:col-span-5 flex flex-col justify-between gap-3">
+                    <div class="flex items-center gap-2.5 pb-2 border-b border-white/5">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-400/20 flex items-center justify-center text-indigo-400">
+                            <i class="fa-brands fa-linux text-base"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-sm font-semibold text-white">Informasi Sistem &amp; OS</h2>
+                            <p class="text-[11px] text-slate-400">Detail Hardware &amp; Jaringan Armbian</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2.5 text-xs">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-slate-400"><i class="fa-solid fa-desktop w-4 text-slate-500 mr-1"></i>Hostname</span>
+                            <span id="sys-hostname" class="font-mono-num font-medium text-slate-200 truncate">--</span>
+                        </div>
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-slate-400"><i class="fa-solid fa-compact-disc w-4 text-slate-500 mr-1"></i>OS</span>
+                            <span id="sys-os" class="font-medium text-slate-200 truncate max-w-[62%] text-right">--</span>
+                        </div>
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-slate-400"><i class="fa-solid fa-code-branch w-4 text-slate-500 mr-1"></i>Kernel / Arch</span>
+                            <span id="sys-kernel" class="font-mono-num text-slate-200 truncate">--</span>
+                        </div>
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-slate-400"><i class="fa-solid fa-wifi w-4 text-slate-500 mr-1"></i>IP &amp; Interface</span>
+                            <span id="sys-ip" class="font-mono-num text-cyan-300 truncate">--</span>
+                        </div>
+                        <div class="flex items-center justify-between gap-2 pt-2 border-t border-white/5">
+                            <span class="text-slate-400"><i class="fa-solid fa-stopwatch w-4 text-emerald-400 mr-1"></i>Server Uptime</span>
+                            <span id="sys-uptime" class="font-mono-num font-semibold text-emerald-300">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DAFTAR PROSES TERATAS -->
+                <div class="pro-card p-4 sm:p-5 md:col-span-7 flex flex-col justify-between">
+                    <div class="flex items-center justify-between gap-2 pb-3 border-b border-white/5">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-400/20 flex items-center justify-center text-emerald-400">
+                                <i class="fa-solid fa-list-check text-sm"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-sm font-semibold text-white">Proses Aktif (Bot &amp; Service)</h2>
+                                <p class="text-[11px] text-slate-400">5 proses teratas berdasarkan penggunaan RAM</p>
+                            </div>
+                        </div>
+                        <span class="text-[11px] px-2 py-0.5 rounded-md bg-white/5 text-slate-400 font-mono-num">Top 5</span>
+                    </div>
+
+                    <div class="overflow-x-auto mt-2">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="text-[11px] uppercase tracking-wider text-slate-400 border-b border-white/5">
+                                    <th class="py-2 pr-2 font-semibold">PID</th>
+                                    <th class="py-2 px-2 font-semibold">Nama Proses</th>
+                                    <th class="py-2 px-2 font-semibold text-right">CPU</th>
+                                    <th class="py-2 pl-2 font-semibold text-right">RAM</th>
+                                </tr>
+                            </thead>
+                            <tbody id="process-list" class="divide-y divide-white/5 font-mono-num text-slate-300">
+                                <tr>
+                                    <td colspan="4" class="py-6 text-center text-slate-500 font-sans">Memuat daftar proses...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- =============================================================== -->
+        <!-- VIEW 2: FILE MANAGER (/home/<nama-projek>)                      -->
+        <!-- =============================================================== -->
+        <section id="view-files" class="hidden space-y-4">
+            <div class="pro-card p-4 sm:p-5 space-y-4">
+                <!-- Header & Tombol Aksi File Manager -->
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-4 border-b border-white/10">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-folder-tree text-amber-400"></i>
+                            <h2 class="text-base font-bold text-white">File Manager Projek</h2>
+                        </div>
+                        <!-- Breadcrumb Lokasi -->
+                        <div id="fm-breadcrumb" class="flex flex-wrap items-center gap-1.5 mt-1.5 text-xs font-mono-num text-slate-300">
+                            <button type="button" data-path="" class="text-cyan-400 hover:underline cursor-pointer">/home</button>
+                        </div>
+                    </div>
+
+                    <!-- Toolbar Aksi -->
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button type="button" id="btn-new-project" class="px-3 py-2 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-400/30 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer">
+                            <i class="fa-solid fa-folder-plus"></i>
+                            <span>Projek Baru</span>
+                        </button>
+
+                        <button type="button" id="btn-new-file" class="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-200 border border-white/10 text-xs font-medium flex items-center gap-1.5 transition cursor-pointer">
+                            <i class="fa-solid fa-file-circle-plus text-sky-400"></i>
+                            <span>File Baru</span>
+                        </button>
+
+                        <label class="px-3 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-400/30 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <span>Upload File / ZIP</span>
+                            <input type="file" id="fm-upload-input" multiple class="hidden">
+                        </label>
+
+                        <button type="button" id="btn-fm-terminal" class="px-3 py-2 rounded-xl bg-violet-500/20 hover:bg-violet-500/30 text-violet-300 border border-violet-400/30 text-xs font-medium flex items-center gap-1.5 transition cursor-pointer">
+                            <i class="fa-solid fa-terminal"></i>
+                            <span>Terminal Disini</span>
+                        </button>
+
+                        <button type="button" id="btn-fm-refresh" aria-label="Refresh File" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 flex items-center justify-center transition cursor-pointer">
+                            <i class="fa-solid fa-rotate-right text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bar Progres Upload -->
+                <div id="fm-upload-status" class="hidden p-3 rounded-xl bg-cyan-500/10 border border-cyan-400/25 text-xs text-cyan-200 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                        <span id="fm-upload-text">Mengunggah file ke STB...</span>
+                    </div>
+                    <span id="fm-upload-pct" class="font-mono-num font-bold">0%</span>
+                </div>
+
+                <!-- Tabel Daftar File & Folder -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                        <thead>
+                            <tr class="text-[11px] uppercase tracking-wider text-slate-400 border-b border-white/10">
+                                <th class="py-2.5 pr-3 font-semibold">Nama File / Projek</th>
+                                <th class="py-2.5 px-3 font-semibold hidden sm:table-cell">Ukuran</th>
+                                <th class="py-2.5 px-3 font-semibold hidden md:table-cell">Diubah</th>
+                                <th class="py-2.5 pl-3 font-semibold text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fm-list" class="divide-y divide-white/5">
+                            <tr>
+                                <td colspan="4" class="py-8 text-center text-slate-400 text-xs">Memuat isi /home...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================================== -->
+        <!-- VIEW 3: WEB TERMINAL                                            -->
+        <!-- =============================================================== -->
+        <section id="view-terminal" class="hidden space-y-4">
+            <div class="pro-card overflow-hidden flex flex-col">
+                <!-- Header Terminal -->
+                <div class="p-3.5 sm:p-4 bg-slate-900/90 border-b border-white/10 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center gap-2.5">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3 h-3 rounded-full bg-rose-500/80"></span>
+                            <span class="w-3 h-3 rounded-full bg-amber-500/80"></span>
+                            <span class="w-3 h-3 rounded-full bg-emerald-500/80"></span>
+                        </div>
+                        <span class="text-xs font-mono-num font-semibold text-slate-200 ml-1">
+                            <i class="fa-solid fa-terminal text-emerald-400 mr-1.5"></i>Home Server Console
+                        </span>
+                    </div>
+
+                    <!-- Pilih Folder Projek & Tombol Kontrol -->
+                    <div class="flex flex-wrap items-center gap-2">
+                        <select id="term-project-select" class="px-2.5 py-1.5 rounded-lg bg-slate-800 border border-white/10 text-xs font-mono-num text-slate-200 focus:outline-none focus:border-cyan-400">
+                            <option value="">/home (Root Projek)</option>
+                        </select>
+
+                        <button type="button" id="btn-term-clear" class="px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-slate-300 transition cursor-pointer">
+                            <i class="fa-solid fa-eraser mr-1"></i>Clear
+                        </button>
+
+                        <button type="button" id="btn-term-kill" disabled class="px-2.5 py-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 disabled:opacity-40 border border-rose-500/30 text-xs text-rose-300 font-medium transition cursor-pointer">
+                            <i class="fa-solid fa-stop mr-1"></i>Stop (Ctrl+C)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Shortcut Perintah Cepat Bot & Web -->
+                <div class="px-3.5 py-2 bg-slate-950/70 border-b border-white/5 flex items-center gap-1.5 overflow-x-auto text-[11px] font-mono-num">
+                    <span class="text-slate-500 shrink-0 mr-1">Cepat:</span>
+                    <button type="button" data-cmd="ls -la" class="quick-cmd px-2 py-1 rounded-md bg-white/5 hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-200 border border-white/5 shrink-0 cursor-pointer">ls -la</button>
+                    <button type="button" data-cmd="npm install" class="quick-cmd px-2 py-1 rounded-md bg-white/5 hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-200 border border-white/5 shrink-0 cursor-pointer">npm install</button>
+                    <button type="button" data-cmd="pm2 list" class="quick-cmd px-2 py-1 rounded-md bg-white/5 hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-200 border border-white/5 shrink-0 cursor-pointer">pm2 list</button>
+                    <button type="button" data-cmd="pm2 restart all" class="quick-cmd px-2 py-1 rounded-md bg-white/5 hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-200 border border-white/5 shrink-0 cursor-pointer">pm2 restart all</button>
+                    <button type="button" data-cmd="pm2 save" class="quick-cmd px-2 py-1 rounded-md bg-white/5 hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-200 border border-white/5 shrink-0 cursor-pointer">pm2 save</button>
+                    <button type="button" data-cmd="free -h && df -h /" class="quick-cmd px-2 py-1 rounded-md bg-white/5 hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-200 border border-white/5 shrink-0 cursor-pointer">free -h</button>
+                </div>
+
+                <!-- Area Output Terminal -->
+                <div id="term-output" class="p-4 bg-[#050811] font-mono-num text-xs leading-relaxed text-slate-200 h-80 sm:h-96 overflow-y-auto whitespace-pre-wrap break-words">Selamat datang di Web Terminal — Home Server (Dalang Store).
+Lokasi aktif: /home
+Ketik perintah Linux / Node.js / PM2 di bawah ini untuk mengelola bot &amp; web Anda.
+--------------------------------------------------------------------------------
+</div>
+
+                <!-- Input Bar Perintah -->
+                <form id="term-form" class="p-3 bg-slate-900/95 border-t border-white/10 flex items-center gap-2">
+                    <span id="term-prompt" class="text-xs font-mono-num text-emerald-400 font-semibold shrink-0">/home $</span>
+                    <input id="term-input" type="text" autocomplete="off" spellcheck="false" placeholder="Contoh: npm install atau pm2 start index.js --name bot" class="w-full bg-transparent text-xs sm:text-sm font-mono-num text-white placeholder-slate-500 focus:outline-none">
+                    <button type="submit" id="btn-term-run" class="px-3.5 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-400/30 text-xs font-semibold shrink-0 transition cursor-pointer">
+                        Run
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="mt-8 pb-4 text-center text-[11px] text-slate-500">
+            Home Server &mdash; Dalang Store &bull; Armbian Mini Server Dashboard
+        </footer>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- MODAL 1: BUAT PROJEK / FOLDER / FILE BARU                           -->
+    <!-- =================================================================== -->
+    <div id="modal-create" class="fixed inset-0 bg-black/70 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+        <div class="pro-card w-full max-w-md p-5 space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 id="modal-create-title" class="text-sm font-bold text-white">Buat Projek Baru</h3>
+                <button type="button" id="btn-create-close" class="text-slate-400 hover:text-white cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <p id="modal-create-desc" class="text-xs text-slate-400">Folder projek akan dibuat di dalam direktori <span class="text-cyan-300 font-mono-num">/home/&lt;nama-projek&gt;</span>.</p>
+            <input id="modal-create-input" type="text" placeholder="Nama projek (misal: bot-wa)" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-white/15 text-sm font-mono-num text-white focus:outline-none focus:border-cyan-400">
+            <div class="flex justify-end gap-2 pt-1">
+                <button type="button" id="btn-create-cancel" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs text-slate-300 cursor-pointer">Batal</button>
+                <button type="button" id="btn-create-submit" class="px-4 py-2 rounded-xl bg-cyan-500/25 hover:bg-cyan-500/35 text-cyan-200 border border-cyan-400/30 text-xs font-semibold cursor-pointer">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- MODAL 2: EDITOR KODE FILE                                           -->
+    <!-- =================================================================== -->
+    <div id="modal-editor" class="fixed inset-0 bg-black/75 backdrop-blur-xs z-50 hidden items-center justify-center p-3 sm:p-5">
+        <div class="pro-card w-full max-w-4xl flex flex-col overflow-hidden max-h-[90vh]">
+            <div class="p-3.5 sm:p-4 bg-slate-900/90 border-b border-white/10 flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2 min-w-0">
+                    <i class="fa-solid fa-file-code text-cyan-400"></i>
+                    <span id="editor-filename" class="text-xs sm:text-sm font-mono-num font-semibold text-white truncate">index.js</span>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                    <button type="button" id="btn-editor-save" class="px-3.5 py-1.5 rounded-lg bg-emerald-500/25 hover:bg-emerald-500/35 text-emerald-200 border border-emerald-400/30 text-xs font-semibold flex items-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span>Simpan</span>
+                    </button>
+                    <button type="button" id="btn-editor-close" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 flex items-center justify-center cursor-pointer">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+            <textarea id="editor-textarea" spellcheck="false" class="w-full h-96 sm:h-[62vh] p-4 bg-[#050811] text-slate-100 font-mono-num text-xs leading-relaxed focus:outline-none resize-none"></textarea>
+        </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- MODAL 3: KONFIRMASI HAPUS (PENGGANTI confirm())                     -->
+    <!-- =================================================================== -->
+    <div id="modal-delete" class="fixed inset-0 bg-black/70 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+        <div class="pro-card w-full max-w-sm p-5 space-y-4">
+            <div class="flex items-center gap-2.5 text-rose-400">
+                <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+                <h3 class="text-sm font-bold text-white">Konfirmasi Hapus</h3>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+                Apakah Anda yakin ingin menghapus <span id="delete-target-name" class="font-mono-num font-semibold text-rose-300">item</span> secara permanen?
+            </p>
+            <div class="flex justify-end gap-2 pt-1">
+                <button type="button" id="btn-delete-cancel" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs text-slate-300 cursor-pointer">Batal</button>
+                <button type="button" id="btn-delete-confirm" class="px-4 py-2 rounded-xl bg-rose-500/25 hover:bg-rose-500/35 text-rose-200 border border-rose-400/30 text-xs font-semibold cursor-pointer">Ya, Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast-box" class="fixed bottom-4 right-4 z-50 space-y-2 max-w-xs w-full pointer-events-none"></div>
+
+    <!-- =================================================================== -->
+    <!-- SCRIPT LOGIKA DASBOR, FILE MANAGER & WEB TERMINAL                   -->
+    <!-- =================================================================== -->
+    <script>
+        (function () {
+            'use strict';
+
+            // State Aplikasi
+            let selectedVolt = 5;
+            let currentFmPath = '';
+            let createMode = 'project'; // 'project' | 'file'
+            let editingFilePath = '';
+            let deleteTargetPath = '';
+
+            // State Terminal
+            let termCwd = '';
+            let activeEventSource = null;
+            let activeSessionId = null;
+            const cmdHistory = [];
+            let historyIdx = -1;
+
+            // Data Riwayat Grafik (60 titik)
+            const MAX_POINTS = 60;
+            const cpuHistory = new Array(MAX_POINTS).fill(0);
+            const ramHistory = new Array(MAX_POINTS).fill(0);
+
+            // =================================================================
+            // HELPER FORMAT & NOTIFIKASI TOAST
+            // =================================================================
+            function formatBytes(bytes) {
+                if (!bytes || bytes <= 0) return '0 B';
+                const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+                const idx = Math.floor(Math.log(bytes) / Math.log(1024));
+                const val = bytes / Math.pow(1024, idx);
+                return `${val >= 100 ? val.toFixed(0) : val.toFixed(idx === 0 ? 0 : 2)} ${units[idx]}`;
+            }
+
+            function formatUptime(sec) {
+                const s = Math.floor(sec || 0);
+                const d = Math.floor(s / 86400);
+                const h = Math.floor((s % 86400) / 3600);
+                const m = Math.floor((s % 3600) / 60);
+                if (d > 0) return `${d}h ${h}j ${m}m`;
+                if (h > 0) return `${h}j ${m}m ${s % 60}d`;
+                return `${m}m ${s % 60}d`;
+            }
+
+            function showToast(message, type = 'info') {
+                const box = document.getElementById('toast-box');
+                const el = document.createElement('div');
+                const colorMap = {
+                    success: 'bg-emerald-950/90 border-emerald-400/40 text-emerald-200',
+                    error: 'bg-rose-950/90 border-rose-400/40 text-rose-200',
+                    info: 'bg-slate-900/95 border-cyan-400/40 text-cyan-200'
+                };
+                const iconMap = {
+                    success: 'fa-circle-check text-emerald-400',
+                    error: 'fa-circle-xmark text-rose-400',
+                    info: 'fa-circle-info text-cyan-400'
+                };
+                el.className = `pointer-events-auto px-3.5 py-2.5 rounded-xl border backdrop-blur-md shadow-xl text-xs flex items-center gap-2.5 transition-all duration-200 ${colorMap[type] || colorMap.info}`;
+                el.innerHTML = `<i class="fa-solid ${iconMap[type] || iconMap.info}"></i><span class="leading-snug">${message}</span>`;
+                box.appendChild(el);
+                setTimeout(() => {
+                    el.style.opacity = '0';
+                    setTimeout(() => el.remove(), 220);
+                }, 3200);
+            }
+
+            // =================================================================
+            // NAVIGASI DRAWER (MENU GARIS 3 POJOK KANAN) & SWITCH TAB
+            // =================================================================
+            const navDrawer = document.getElementById('nav-drawer');
+            const navBackdrop = document.getElementById('nav-backdrop');
+
+            function openDrawer() {
+                navBackdrop.classList.remove('hidden');
+                requestAnimationFrame(() => {
+                    navBackdrop.classList.remove('opacity-0');
+                    navDrawer.classList.remove('translate-x-full');
+                });
+            }
+
+            function closeDrawer() {
+                navBackdrop.classList.add('opacity-0');
+                navDrawer.classList.add('translate-x-full');
+                setTimeout(() => navBackdrop.classList.add('hidden'), 220);
+            }
+
+            document.getElementById('btn-menu-open').addEventListener('click', openDrawer);
+            document.getElementById('btn-menu-close').addEventListener('click', closeDrawer);
+            navBackdrop.addEventListener('click', closeDrawer);
+
+            function switchTab(tabName) {
+                const views = {
+                    dashboard: document.getElementById('view-dashboard'),
+                    files: document.getElementById('view-files'),
+                    terminal: document.getElementById('view-terminal')
+                };
+
+                Object.keys(views).forEach((key) => {
+                    if (key === tabName) {
+                        views[key].classList.remove('hidden');
+                    } else {
+                        views[key].classList.add('hidden');
+                    }
+                });
+
+                document.querySelectorAll('.nav-item').forEach((btn) => {
+                    const isActive = btn.getAttribute('data-nav') === tabName;
+                    if (isActive) {
+                        btn.className = 'nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium bg-cyan-500/15 text-cyan-300 border border-cyan-400/25 transition cursor-pointer';
+                    } else {
+                        btn.className = 'nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/5 border border-transparent transition cursor-pointer';
+                    }
+                });
+
+                closeDrawer();
+
+                if (tabName === 'dashboard') {
+                    resizeAndDrawChart();
+                } else if (tabName === 'files') {
+                    loadFiles(currentFmPath);
+                } else if (tabName === 'terminal') {
+                    refreshTerminalProjectList();
+                    document.getElementById('term-input').focus();
+                }
+            }
+
+            document.querySelectorAll('.nav-item').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    switchTab(btn.getAttribute('data-nav'));
+                });
+            });
+
+            // =================================================================
+            // GRAFIK REAL-TIME CANVAS RESPONSIF
+            // =================================================================
+            const canvas = document.getElementById('perf-chart');
+            const ctx = canvas.getContext('2d');
+
+            function resizeAndDrawChart() {
+                const wrapper = document.getElementById('chart-wrapper');
+                if (!wrapper || wrapper.offsetParent === null) return;
+                const dpr = window.devicePixelRatio || 1;
+                const rect = wrapper.getBoundingClientRect();
+                canvas.width = Math.max(200, Math.floor(rect.width * dpr));
+                canvas.height = Math.max(140, Math.floor(rect.height * dpr));
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                drawChart(rect.width, rect.height);
+            }
+
+            function drawChart(width, height) {
+                ctx.clearRect(0, 0, width, height);
+
+                const padLeft = 34;
+                const padRight = 10;
+                const padTop = 10;
+                const padBottom = 20;
+                const chartW = width - padLeft - padRight;
+                const chartH = height - padTop - padBottom;
+
+                if (chartW <= 0 || chartH <= 0) return;
+
+                // Grid horizontal & label persentase
+                ctx.font = '10px "JetBrains Mono", monospace';
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'middle';
+
+                [0, 25, 50, 75, 100].forEach((val) => {
+                    const y = padTop + chartH - (val / 100) * chartH;
+                    ctx.strokeStyle = 'rgba(148, 163, 184, 0.10)';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(padLeft, y);
+                    ctx.lineTo(width - padRight, y);
+                    ctx.stroke();
+
+                    ctx.fillStyle = 'rgba(148, 163, 184, 0.65)';
+                    ctx.fillText(`${val}%`, padLeft - 6, y);
+                });
+
+                function drawSeries(data, strokeColor, fillTopColor) {
+                    const stepX = chartW / (MAX_POINTS - 1);
+                    ctx.beginPath();
+                    data.forEach((val, idx) => {
+                        const x = padLeft + idx * stepX;
+                        const y = padTop + chartH - (Math.max(0, Math.min(100, val)) / 100) * chartH;
+                        if (idx === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    });
+
+                    ctx.strokeStyle = strokeColor;
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+
+                    // Area gradient
+                    ctx.lineTo(padLeft + (MAX_POINTS - 1) * stepX, padTop + chartH);
+                    ctx.lineTo(padLeft, padTop + chartH);
+                    ctx.closePath();
+
+                    const grad = ctx.createLinearGradient(0, padTop, 0, padTop + chartH);
+                    grad.addColorStop(0, fillTopColor);
+                    grad.addColorStop(1, 'rgba(15, 23, 42, 0)');
+                    ctx.fillStyle = grad;
+                    ctx.fill();
+                }
+
+                drawSeries(ramHistory, '#a78bfa', 'rgba(167, 139, 250, 0.22)');
+                drawSeries(cpuHistory, '#22d3ee', 'rgba(34, 211, 238, 0.26)');
+            }
+
+            window.addEventListener('resize', resizeAndDrawChart);
+
+            // =================================================================
+            // PILIH ADAPTOR DAYA (5V / 12V)
+            // =================================================================
+            const btnVolt5 = document.getElementById('btn-volt-5');
+            const btnVolt12 = document.getElementById('btn-volt-12');
+
+            function setAdapterVolt(v) {
+                selectedVolt = v;
+                if (v === 5) {
+                    btnVolt5.className = 'px-2 py-1 rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 transition cursor-pointer';
+                    btnVolt12.className = 'px-2 py-1 rounded-md text-slate-400 hover:text-white transition cursor-pointer';
+                } else {
+                    btnVolt12.className = 'px-2 py-1 rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 transition cursor-pointer';
+                    btnVolt5.className = 'px-2 py-1 rounded-md text-slate-400 hover:text-white transition cursor-pointer';
+                }
+                fetchStats();
+            }
+
+            btnVolt5.addEventListener('click', () => setAdapterVolt(5));
+            btnVolt12.addEventListener('click', () => setAdapterVolt(12));
+
+            // =================================================================
+            // TELEMETRI REAL-TIME (/api/stats + AUTO-RECONNECT)
+            // =================================================================
+            function setConnectionState(state) {
+                const dot = document.getElementById('conn-dot');
+                const text = document.getElementById('conn-text');
+                const badge = document.getElementById('conn-badge');
+
+                if (state === 'online') {
+                    dot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0';
+                    text.textContent = 'Online';
+                    badge.className = 'flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900/80 border border-white/10 text-[11px] sm:text-xs font-medium text-emerald-300';
+                } else {
+                    dot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-ping shrink-0';
+                    text.textContent = 'Reconnect...';
+                    badge.className = 'flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-amber-950/60 border border-amber-400/30 text-[11px] sm:text-xs font-medium text-amber-300';
+                }
+            }
+
+            function renderStats(data) {
+                // 1. CPU
+                document.getElementById('cpu-cores').textContent = `${data.cpu.cores} Core`;
+                document.getElementById('cpu-percent').textContent = `${data.cpu.usage.toFixed(1)}%`;
+                document.getElementById('cpu-load').textContent = `Load ${data.cpu.load1m.toFixed(2)}`;
+                document.getElementById('cpu-bar').style.width = `${data.cpu.usage}%`;
+                document.getElementById('cpu-model').textContent = data.cpu.model;
+
+                // 2. RAM
+                document.getElementById('ram-percent-badge').textContent = `${data.memory.percent.toFixed(0)}%`;
+                document.getElementById('ram-used').textContent = formatBytes(data.memory.used);
+                document.getElementById('ram-total').textContent = `/ ${formatBytes(data.memory.total)}`;
+                document.getElementById('ram-bar').style.width = `${data.memory.percent}%`;
+                document.getElementById('ram-avail').textContent = `Sisa: ${formatBytes(data.memory.available)}`;
+                document.getElementById('swap-info').textContent = `Swap: ${formatBytes(data.memory.swapUsed)}`;
+
+                // 3. Storage
+                document.getElementById('disk-percent-badge').textContent = `${data.storage.percent.toFixed(0)}%`;
+                document.getElementById('disk-used').textContent = formatBytes(data.storage.used);
+                document.getElementById('disk-total').textContent = `/ ${formatBytes(data.storage.total)}`;
+                document.getElementById('disk-bar').style.width = `${data.storage.percent}%`;
+                document.getElementById('disk-avail').textContent = `Kosong: ${formatBytes(data.storage.available)}`;
+                document.getElementById('disk-mount').textContent = `Root: ${data.storage.mount || '/'}`;
+
+                // 4. Suhu SoC
+                const temp = data.temperature.celsius;
+                document.getElementById('temp-val').textContent = `${temp.toFixed(1)}°C`;
+                document.getElementById('temp-source').textContent = `Sensor: ${data.temperature.source}`;
+                const tempPct = Math.max(10, Math.min(100, ((temp - 25) / 60) * 100));
+                document.getElementById('temp-bar').style.width = `${tempPct}%`;
+
+                const tempBadge = document.getElementById('temp-status');
+                if (temp >= 72) {
+                    tempBadge.textContent = 'Panas';
+                    tempBadge.className = 'text-[10px] sm:text-[11px] px-1.5 sm:px-2 py-0.5 rounded-md bg-rose-500/15 text-rose-300 border border-rose-500/30 font-medium shrink-0';
+                } else if (temp >= 58) {
+                    tempBadge.textContent = 'Hangat';
+                    tempBadge.className = 'text-[10px] sm:text-[11px] px-1.5 sm:px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-300 border border-amber-500/30 font-medium shrink-0';
+                } else {
+                    tempBadge.textContent = 'Normal';
+                    tempBadge.className = 'text-[10px] sm:text-[11px] px-1.5 sm:px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 font-medium shrink-0';
+                }
+
+                // 5. Daya Listrik
+                document.getElementById('power-mode').textContent = data.power.mode;
+                document.getElementById('power-watt').textContent = `${data.power.watt.toFixed(2)} W`;
+                document.getElementById('power-volt').textContent = `${data.power.volt.toFixed(2)} V`;
+                document.getElementById('power-ampere').textContent = `${data.power.ampere.toFixed(2)} A`;
+                document.getElementById('power-cost').textContent = `Rp ${Number(data.power.monthlyCostIdr).toLocaleString('id-ID')} / bln`;
+
+                // 6. Sistem & Jaringan
+                document.getElementById('sys-hostname').textContent = data.system.hostname;
+                document.getElementById('sys-os').textContent = data.system.osName;
+                document.getElementById('sys-kernel').textContent = `${data.system.kernel} (${data.system.arch})`;
+                const wifiTxt = data.system.wifiSignal !== null ? ` • WiFi ${data.system.wifiSignal}%` : '';
+                document.getElementById('sys-ip').textContent = `${data.system.ip} (${data.system.netInterface}${wifiTxt})`;
+                const upStr = formatUptime(data.system.uptimeSeconds);
+                document.getElementById('sys-uptime').textContent = upStr;
+
+                // Update Drawer info
+                document.getElementById('drawer-ip').textContent = data.system.ip;
+                document.getElementById('drawer-uptime').textContent = upStr;
+
+                // 7. Proses Aktif
+                const procTbody = document.getElementById('process-list');
+                if (Array.isArray(data.processes) && data.processes.length > 0) {
+                    procTbody.innerHTML = data.processes.map((p) => `
+                        <tr class="hover:bg-white/[0.03] transition">
+                            <td class="py-2 pr-2 text-slate-400">${p.pid}</td>
+                            <td class="py-2 px-2 font-medium text-slate-200 truncate max-w-[140px]">${p.name}</td>
+                            <td class="py-2 px-2 text-right text-cyan-300">${p.cpu}</td>
+                            <td class="py-2 pl-2 text-right text-violet-300">${p.mem}</td>
+                        </tr>
+                    `).join('');
+                }
+
+                // 8. Update Grafik
+                cpuHistory.push(data.cpu.usage);
+                if (cpuHistory.length > MAX_POINTS) cpuHistory.shift();
+                ramHistory.push(data.memory.percent);
+                if (ramHistory.length > MAX_POINTS) ramHistory.shift();
+                resizeAndDrawChart();
+            }
+
+            async function fetchStats() {
+                try {
+                    const controller = new AbortController();
+                    const timer = setTimeout(() => controller.abort(), 3500);
+                    const res = await fetch(`/api/stats?volt=${selectedVolt}`, {
+                        cache: 'no-store',
+                        signal: controller.signal
+                    });
+                    clearTimeout(timer);
+
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    const data = await res.json();
+                    setConnectionState('online');
+                    renderStats(data);
+                } catch (err) {
+                    setConnectionState('offline');
+                }
+            }
+
+            // =================================================================
+            // FILE MANAGER (/home/<nama-projek>)
+            // =================================================================
+            function renderBreadcrumb(relPath) {
+                const container = document.getElementById('fm-breadcrumb');
+                const parts = relPath ? relPath.split('/').filter(Boolean) : [];
+                let html = `<button type="button" data-path="" class="fm-crumb text-cyan-400 hover:underline font-semibold cursor-pointer">/home</button>`;
+                let acc = '';
+                parts.forEach((part) => {
+                    acc = acc ? `${acc}/${part}` : part;
+                    html += `<span class="text-slate-600">/</span><button type="button" data-path="${acc}" class="fm-crumb text-slate-200 hover:text-cyan-300 hover:underline cursor-pointer">${part}</button>`;
+                });
+                container.innerHTML = html;
+
+                container.querySelectorAll('.fm-crumb').forEach((btn) => {
+                    btn.addEventListener('click', () => loadFiles(btn.getAttribute('data-path')));
+                });
+            }
+
+            async function loadFiles(relPath = '') {
+                currentFmPath = relPath;
+                renderBreadcrumb(relPath);
+                const tbody = document.getElementById('fm-list');
+
+                let items = [];
+                try {
+                    const res = await fetch(`/api/files/list?path=${encodeURIComponent(relPath)}`, { cache: 'no-store' });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error || 'Gagal memuat file');
+                    items = data.items || [];
+                } catch (err) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-rose-400 text-xs">${err.message}</td></tr>`;
+                    return;
+                }
+
+                let rows = '';
+                // Baris Kembali (..) jika di dalam subfolder
+                if (relPath) {
+                    const parentPath = relPath.includes('/') ? relPath.slice(0, relPath.lastIndexOf('/')) : '';
+                    rows += `
+                        <tr class="hover:bg-white/[0.03] transition">
+                            <td colspan="4" class="py-2.5">
+                                <button type="button" data-open-dir="${parentPath}" class="flex items-center gap-2.5 text-cyan-300 hover:text-cyan-200 font-mono-num text-xs cursor-pointer">
+                                    <i class="fa-solid fa-arrow-turn-up"></i>
+                                    <span>.. (Kembali ke folder sebelumnya)</span>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }
+
+                if (items.length === 0) {
+                    rows += `<tr><td colspan="4" class="py-8 text-center text-slate-500 text-xs">Folder ini masih kosong. Klik <b>Projek Baru</b> atau <b>Upload File / ZIP</b>.</td></tr>`;
+                } else {
+                    items.forEach((item) => {
+                        const iconHtml = item.isDirectory
+                            ? '<i class="fa-solid fa-folder text-amber-400 text-base"></i>'
+                            : item.isZip
+                                ? '<i class="fa-solid fa-file-zipper text-purple-400 text-base"></i>'
+                                : '<i class="fa-solid fa-file-code text-cyan-400 text-base"></i>';
+
+                        const dateStr = new Date(item.mtime).toLocaleDateString('id-ID', {
+                            day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+                        });
+
+                        const nameBtn = item.isDirectory
+                            ? `<button type="button" data-open-dir="${item.relPath}" class="font-medium text-white hover:text-cyan-300 text-left truncate cursor-pointer">${item.name}</button>`
+                            : `<button type="button" data-edit-file="${item.relPath}" class="font-medium text-slate-200 hover:text-cyan-300 text-left truncate cursor-pointer">${item.name}</button>`;
+
+                        const unzipBtn = item.isZip
+                            ? `<button type="button" data-unzip="${item.relPath}" title="Unzip" class="px-2 py-1 rounded-lg bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-400/30 text-[11px] font-medium cursor-pointer"><i class="fa-solid fa-box-open mr-1"></i>Unzip</button>`
+                            : '';
+
+                        const editDownloadBtns = !item.isDirectory
+                            ? `
+                                <button type="button" data-edit-file="${item.relPath}" title="Edit File" class="px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-slate-200 border border-white/10 text-[11px] cursor-pointer"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <a href="/api/files/download?path=${encodeURIComponent(item.relPath)}" title="Download" class="px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-cyan-300 border border-white/10 text-[11px] inline-flex items-center"><i class="fa-solid fa-download"></i></a>
+                              `
+                            : '';
+
+                        rows += `
+                            <tr class="hover:bg-white/[0.03] transition">
+                                <td class="py-2.5 pr-3">
+                                    <div class="flex items-center gap-2.5 min-w-0">
+                                        <span class="w-5 text-center shrink-0">${iconHtml}</span>
+                                        ${nameBtn}
+                                    </div>
+                                </td>
+                                <td class="py-2.5 px-3 font-mono-num text-xs text-slate-400 hidden sm:table-cell">${item.isDirectory ? 'Folder' : formatBytes(item.size)}</td>
+                                <td class="py-2.5 px-3 font-mono-num text-xs text-slate-400 hidden md:table-cell">${dateStr}</td>
+                                <td class="py-2.5 pl-3 text-right">
+                                    <div class="inline-flex items-center justify-end gap-1.5">
+                                        ${unzipBtn}
+                                        ${editDownloadBtns}
+                                        <button type="button" data-del-path="${item.relPath}" data-del-name="${item.name}" title="Hapus" class="px-2 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/25 text-[11px] cursor-pointer"><i class="fa-solid fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+
+                tbody.innerHTML = rows;
+
+                // Event listeners baris file
+                tbody.querySelectorAll('[data-open-dir]').forEach((el) => {
+                    el.addEventListener('click', () => loadFiles(el.getAttribute('data-open-dir')));
+                });
+                tbody.querySelectorAll('[data-unzip]').forEach((el) => {
+                    el.addEventListener('click', () => unzipArchive(el.getAttribute('data-unzip')));
+                });
+                tbody.querySelectorAll('[data-edit-file]').forEach((el) => {
+                    el.addEventListener('click', () => openCodeEditor(el.getAttribute('data-edit-file')));
+                });
+                tbody.querySelectorAll('[data-del-path]').forEach((el) => {
+                    el.addEventListener('click', () => openDeleteConfirm(el.getAttribute('data-del-path'), el.getAttribute('data-del-name')));
+                });
+            }
+
+            // Modal Buat Projek / File Baru
+            const modalCreate = document.getElementById('modal-create');
+            const inputCreate = document.getElementById('modal-create-input');
+
+            function openCreateModal(mode) {
+                createMode = mode;
+                inputCreate.value = '';
+                if (mode === 'project') {
+                    document.getElementById('modal-create-title').textContent = currentFmPath ? 'Buat Folder Baru' : 'Buat Projek Baru di /home';
+                    document.getElementById('modal-create-desc').innerHTML = `Lokasi penyimpanan: <span class="text-cyan-300 font-mono-num">/home/${currentFmPath ? currentFmPath + '/' : ''}&lt;nama&gt;</span>`;
+                    inputCreate.placeholder = 'Contoh: bot-telegram';
+                } else {
+                    document.getElementById('modal-create-title').textContent = 'Buat File Baru';
+                    document.getElementById('modal-create-desc').innerHTML = `File baru akan dibuat di <span class="text-cyan-300 font-mono-num">/home/${currentFmPath || ''}</span>`;
+                    inputCreate.placeholder = 'Contoh: .env atau index.js';
+                }
+                modalCreate.classList.remove('hidden');
+                modalCreate.classList.add('flex');
+                setTimeout(() => inputCreate.focus(), 50);
+            }
+
+            function closeCreateModal() {
+                modalCreate.classList.add('hidden');
+                modalCreate.classList.remove('flex');
+            }
+
+            document.getElementById('btn-new-project').addEventListener('click', () => openCreateModal('project'));
+            document.getElementById('btn-new-file').addEventListener('click', () => openCreateModal('file'));
+            document.getElementById('btn-create-close').addEventListener('click', closeCreateModal);
+            document.getElementById('btn-create-cancel').addEventListener('click', closeCreateModal);
+
+            document.getElementById('btn-create-submit').addEventListener('click', async () => {
+                const name = inputCreate.value.trim();
+                if (!name) return showToast('Nama tidak boleh kosong.', 'error');
+
+                try {
+                    if (createMode === 'project') {
+                        const res = await fetch('/api/files/mkdir', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ path: currentFmPath, name })
+                        });
+                        const data = await res.json();
+                        if (!res.ok) throw new Error(data.error || 'Gagal membuat folder');
+                        showToast(`Folder "${name}" berhasil dibuat.`, 'success');
+                    } else {
+                        const targetRel = currentFmPath ? `${currentFmPath}/${name}` : name;
+                        const res = await fetch('/api/files/save', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ path: targetRel, content: '' })
+                        });
+                        const data = await res.json();
+                        if (!res.ok) throw new Error(data.error || 'Gagal membuat file');
+                        showToast(`File "${name}" berhasil dibuat.`, 'success');
+                    }
+                    closeCreateModal();
+                    loadFiles(currentFmPath);
+                } catch (err) {
+                    showToast(err.message, 'error');
+                }
+            });
+
+            // Upload File & ZIP
+            document.getElementById('fm-upload-input').addEventListener('change', async (e) => {
+                const files = Array.from(e.target.files || []);
+                if (files.length === 0) return;
+
+                const statusBox = document.getElementById('fm-upload-status');
+                const statusText = document.getElementById('fm-upload-text');
+                const statusPct = document.getElementById('fm-upload-pct');
+                statusBox.classList.remove('hidden');
+
+                let uploadedCount = 0;
+
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    statusText.textContent = `Mengunggah (${i + 1}/${files.length}): ${file.name}`;
+                    statusPct.textContent = `${Math.round((i / files.length) * 100)}%`;
+
+                    try {
+                        const url = `/api/files/upload?path=${encodeURIComponent(currentFmPath)}&name=${encodeURIComponent(file.name)}`;
+                        const res = await fetch(url, { method: 'POST', body: file });
+                        const data = await res.json();
+                        if (!res.ok) throw new Error(data.error || 'Upload gagal');
+                        uploadedCount++;
+                    } catch (err) {
+                        showToast(`Gagal upload ${file.name}: ${err.message}`, 'error');
+                    }
+                }
+
+                statusPct.textContent = '100%';
+                setTimeout(() => statusBox.classList.add('hidden'), 800);
+                e.target.value = '';
+                if (uploadedCount > 0) {
+                    showToast(`${uploadedCount} file berhasil diunggah.`, 'success');
+                    loadFiles(currentFmPath);
+                }
+            });
+
+            // Unzip File ZIP
+            async function unzipArchive(zipRelPath) {
+                showToast('Mengekstrak arsip ZIP...', 'info');
+                try {
+                    const res = await fetch('/api/files/unzip', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ path: zipRelPath })
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error || 'Gagal unzip file');
+                    showToast('Arsip ZIP berhasil diekstrak!', 'success');
+                    loadFiles(currentFmPath);
+                } catch (err) {
+                    showToast(err.message, 'error');
+                }
+            }
+
+            // Editor Kode
+            const modalEditor = document.getElementById('modal-editor');
+            const editorTextarea = document.getElementById('editor-textarea');
+
+            async function openCodeEditor(relPath) {
+                editingFilePath = relPath;
+                document.getElementById('editor-filename').textContent = relPath;
+
+                try {
+                    const res = await fetch(`/api/files/read?path=${encodeURIComponent(relPath)}`, { cache: 'no-store' });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error || 'Gagal membuka file');
+                    editorTextarea.value = data.content || '';
+                    modalEditor.classList.remove('hidden');
+                    modalEditor.classList.add('flex');
+                } catch (err) {
+                    showToast(err.message, 'error');
+                }
+            }
+
+            function closeCodeEditor() {
+                modalEditor.classList.add('hidden');
+                modalEditor.classList.remove('flex');
+            }
+
+            document.getElementById('btn-editor-close').addEventListener('click', closeCodeEditor);
+            document.getElementById('btn-editor-save').addEventListener('click', async () => {
+                try {
+                    const res = await fetch('/api/files/save', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ path: editingFilePath, content: editorTextarea.value })
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error || 'Gagal menyimpan file');
+                    showToast('File berhasil disimpan!', 'success');
+                    closeCodeEditor();
+                    loadFiles(currentFmPath);
+                } catch (err) {
+                    showToast(err.message, 'error');
+                }
+            });
+
+            // Konfirmasi Hapus
+            const modalDelete = document.getElementById('modal-delete');
+
+            function openDeleteConfirm(relPath, name) {
+                deleteTargetPath = relPath;
+                document.getElementById('delete-target-name').textContent = name;
+                modalDelete.classList.remove('hidden');
+                modalDelete.classList.add('flex');
+            }
+
+            function closeDeleteConfirm() {
+                modalDelete.classList.add('hidden');
+                modalDelete.classList.remove('flex');
+            }
+
+            document.getElementById('btn-delete-cancel').addEventListener('click', closeDeleteConfirm);
+            document.getElementById('btn-delete-confirm').addEventListener('click', async () => {
+                try {
+                    const res = await fetch('/api/files/delete', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ path: deleteTargetPath })
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error || 'Gagal menghapus');
+                    showToast('Berhasil dihapus.', 'success');
+                    closeDeleteConfirm();
+                    loadFiles(currentFmPath);
+                } catch (err) {
+                    showToast(err.message, 'error');
+                }
+            });
+
+            document.getElementById('btn-fm-refresh').addEventListener('click', () => loadFiles(currentFmPath));
+            document.getElementById('btn-fm-terminal').addEventListener('click', () => {
+                termCwd = currentFmPath;
+                updateTerminalPrompt();
+                switchTab('terminal');
+            });
+
+            // =================================================================
+            // WEB TERMINAL INTERAKTIF
+            // =================================================================
+            const termOutput = document.getElementById('term-output');
+            const termInput = document.getElementById('term-input');
+            const termSelect = document.getElementById('term-project-select');
+            const btnTermKill = document.getElementById('btn-term-kill');
+
+            function updateTerminalPrompt() {
+                const label = termCwd ? `/home/${termCwd}` : '/home';
+                document.getElementById('term-prompt').textContent = `${label} $`;
+            }
+
+            function appendTerminal(text) {
+                termOutput.textContent += text;
+                termOutput.scrollTop = termOutput.scrollHeight;
+            }
+
+            async function refreshTerminalProjectList() {
+                let folders = [];
+                try {
+                    const res = await fetch('/api/files/list?path=', { cache: 'no-store' });
+                    const data = await res.json();
+                    if (res.ok && Array.isArray(data.items)) {
+                        folders = data.items.filter((i) => i.isDirectory).map((i) => i.name);
+                    }
+                } catch (err) {
+                    // Abaikan error jaringan sesaat
+                }
+
+                let options = `<option value="">/home (Root Projek)</option>`;
+                folders.forEach((f) => {
+                    const sel = termCwd === f ? 'selected' : '';
+                    options += `<option value="${f}" ${sel}>/home/${f}</option>`;
+                });
+                if (termCwd && !folders.includes(termCwd)) {
+                    options += `<option value="${termCwd}" selected>/home/${termCwd}</option>`;
+                }
+                termSelect.innerHTML = options;
+                updateTerminalPrompt();
+            }
+
+            termSelect.addEventListener('change', () => {
+                termCwd = termSelect.value;
+                updateTerminalPrompt();
+                appendTerminal(`\n[Pindah direktori ke ${termCwd ? '/home/' + termCwd : '/home'}]\n`);
+            });
+
+            document.getElementById('btn-term-clear').addEventListener('click', () => {
+                termOutput.textContent = '';
+            });
+
+            async function killTerminalProcess() {
+                if (activeEventSource) {
+                    activeEventSource.close();
+                    activeEventSource = null;
+                }
+                btnTermKill.disabled = true;
+
+                if (activeSessionId) {
+                    try {
+                        await fetch('/api/terminal/kill', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ id: activeSessionId })
+                        });
+                    } catch (err) {
+                        // Abaikan jika proses sudah selesai
+                    }
+                }
+                activeSessionId = null;
+                appendTerminal('\n^C (Proses dihentikan)\n');
+            }
+
+            btnTermKill.addEventListener('click', killTerminalProcess);
+
+            function executeCommand(rawCmd) {
+                const cmd = rawCmd.trim();
+                if (!cmd) return;
+
+                cmdHistory.push(cmd);
+                historyIdx = cmdHistory.length;
+
+                const promptPrefix = termCwd ? `/home/${termCwd} $` : '/home $';
+                appendTerminal(`\n${promptPrefix} ${cmd}\n`);
+
+                if (activeEventSource) {
+                    activeEventSource.close();
+                }
+
+                activeSessionId = String(Date.now());
+                btnTermKill.disabled = false;
+
+                try {
+                    const streamUrl = `/api/terminal/stream?cmd=${encodeURIComponent(cmd)}&cwd=${encodeURIComponent(termCwd)}&id=${activeSessionId}`;
+                    const es = new EventSource(streamUrl);
+                    activeEventSource = es;
+
+                    es.addEventListener('stdout', (e) => {
+                        appendTerminal(JSON.parse(e.data));
+                    });
+
+                    es.addEventListener('stderr', (e) => {
+                        appendTerminal(JSON.parse(e.data));
+                    });
+
+                    es.addEventListener('cwd', (e) => {
+                        const info = JSON.parse(e.data);
+                        termCwd = info.cwd || '';
+                        refreshTerminalProjectList();
+                    });
+
+                    es.addEventListener('done', () => {
+                        es.close();
+                        activeEventSource = null;
+                        activeSessionId = null;
+                        btnTermKill.disabled = true;
+                    });
+
+                    es.onerror = () => {
+                        es.close();
+                        activeEventSource = null;
+                        activeSessionId = null;
+                        btnTermKill.disabled = true;
+                    };
+                } catch (err) {
+                    btnTermKill.disabled = true;
+                    appendTerminal(`Gagal memulai terminal: ${err.message}\n`);
+                }
+            }
+
+            document.getElementById('term-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const val = termInput.value;
+                termInput.value = '';
+                executeCommand(val);
+            });
+
+            // Navigasi Riwayat Perintah (Panah Atas/Bawah)
+            termInput.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowUp') {
+                    if (historyIdx > 0) {
+                        historyIdx--;
+                        termInput.value = cmdHistory[historyIdx];
+                    }
+                    e.preventDefault();
+                } else if (e.key === 'ArrowDown') {
+                    if (historyIdx < cmdHistory.length - 1) {
+                        historyIdx++;
+                        termInput.value = cmdHistory[historyIdx];
+                    } else {
+                        historyIdx = cmdHistory.length;
+                        termInput.value = '';
+                    }
+                    e.preventDefault();
+                }
+            });
+
+            document.querySelectorAll('.quick-cmd').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    executeCommand(btn.getAttribute('data-cmd'));
+                });
+            });
+
+            // =================================================================
+            // INISIALISASI SAAT HALAMAN DIMUAT
+            // =================================================================
+            window.addEventListener('load', () => {
+                resizeAndDrawChart();
+                fetchStats();
+                setInterval(fetchStats, 2000);
+            });
+        })();
+    </script>
+</body>
+</html>
