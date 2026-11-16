@@ -8,7 +8,7 @@ const { execSync, spawn } = require('child_process');
 const PORT = process.env.PORT || 3000;
 
 // Direktori utama projek di /home/<nama-projek> (fallback ke ./projects jika /home tidak tersedia)
-const PROJECTS_ROOT = fs.existsSync('/home') ? '/home' : path.join(__dirname, 'projects');
+const PROJECTS_ROOT = fs.existsSync('/DATA/projek') ? '/home' : path.join(__dirname, 'projects');
 if (!fs.existsSync(PROJECTS_ROOT)) {
     fs.mkdirSync(PROJECTS_ROOT, { recursive: true });
 }
